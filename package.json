@@ -1,0 +1,25 @@
+{
+  "name": "texpress-validation-backfill",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ragnaroknyc/texpress-validation-backfill.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ragnaroknyc/texpress-validation-backfill/issues"
+  },
+  "homepage": "https://github.com/ragnaroknyc/texpress-validation-backfill#readme",
+  "dependencies": {
+    "csv-parser": "^3.0.0",
+    "csv-stringify": "^6.3.0",
+    "lodash": "^4.17.21"
+  },
+  "type": "module"
+}
