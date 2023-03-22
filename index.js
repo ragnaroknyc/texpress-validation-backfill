@@ -3,6 +3,11 @@ import * as csvStringify from "csv-stringify";
 import csvParser from "csv-parser";
 import fs from "fs";
 
+const TAG = 'tag_';
+const PLATE = "plate_";
+const PLATE_STATE = "plate_state_";
+const STATUS = "status_";
+
 const inputCsvPath = "./csv/input.csv";
 let inputCsvData = [];
 
@@ -18,7 +23,7 @@ const handler = () => {
     .on("end", () => {
       if (inputCsvData && inputCsvData.length > 0) {
         const inputCsvDataGrouped = _.groupBy(inputCsvData, (d) =>
-          d.email.toLowerCase()
+          d['Email'].toLowerCase()
         );
         if (inputCsvDataGrouped) {
           Object.keys(inputCsvDataGrouped).forEach((email) => {
@@ -30,14 +35,11 @@ const handler = () => {
                 email: email.toLowerCase(),
               };
               inputCsvDataGrouped[email].forEach((d, i) => {
-                const { Plate, state, type, status, status_updated } = d;
                 const order = i + 1;
-                output[`plate_${order}`] = Plate;
-                output[`state_${order}`] = state;
-                output[`type_${order}`] = type;
-                output[`status_${order}`] = status;
-                output[`status_updated_${order}`] = status_updated;
-
+                output[`${TAG}${order}`] = d['Tag'];
+                output[`${PLATE}${order}`] = d['Plate'];
+                output[`${PLATE_STATE}${order}`] = d['Plate State'];
+                output[`${STATUS}${order}`] = d['Status'];
                 if (countOutputCsvHeader <= i) {
                   countOutputCsvHeader++;
                 }
@@ -52,15 +54,13 @@ const handler = () => {
           };
           for (let i = 0; i < countOutputCsvHeader; i++) {
             const order = i + 1;
-            outputCsvHeader[`plate_${order}`] = `plate_${order}`;
-            outputCsvHeader[`state_${order}`] = `state_${order}`;
-            outputCsvHeader[`type_${order}`] = `type_${order}`;
-            outputCsvHeader[`status_${order}`] = `status_${order}`;
-            outputCsvHeader[`status_updated_${order}`] = `status_updated_${order}`;
+            outputCsvHeader[`${TAG}${order}`] = `${TAG}${order}`;
+            outputCsvHeader[`${PLATE}${order}`] = `${PLATE}${order}`;
+            outputCsvHeader[`${PLATE_STATE}${order}`] = `${PLATE_STATE}${order}`;
+            outputCsvHeader[`${STATUS}${order}`] = `${STATUS}${order}`;
           }
           outputCsvData[0] = outputCsvHeader;
 
-          console.log("outputCsvData", outputCsvData);
           csvStringify.stringify(outputCsvData, (e, o) =>
             fs.writeFileSync(outputCsvPath, o)
           );
