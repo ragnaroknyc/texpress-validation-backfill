@@ -8,10 +8,11 @@ const PLATE = "plate_";
 const PLATE_STATE = "plate_state_";
 const STATUS = "status_";
 
-const inputCsvPath = "./csv/input.csv";
+const inputCsvPath = "./csv/new-input.csv";
 let inputCsvData = [];
 
-const outputCsvPath = "./csv/output.csv";
+const outputCsvPath1 = "./csv/new-output-1.csv";
+const outputCsvPath2 = "./csv/new-output-2.csv";
 let countOutputCsvHeader = 0;
 let outputCsvData = [{}];
 
@@ -39,7 +40,7 @@ const handler = () => {
                 output[`${TAG}${order}`] = d['Tag'];
                 output[`${PLATE}${order}`] = d['Plate'];
                 output[`${PLATE_STATE}${order}`] = d['Plate State'];
-                output[`${STATUS}${order}`] = d['Status'];
+                output[`${STATUS}${order}`] = d['TVL Status Valid or Invalid'];
                 if (countOutputCsvHeader <= i) {
                   countOutputCsvHeader++;
                 }
@@ -59,11 +60,21 @@ const handler = () => {
             outputCsvHeader[`${PLATE_STATE}${order}`] = `${PLATE_STATE}${order}`;
             outputCsvHeader[`${STATUS}${order}`] = `${STATUS}${order}`;
           }
-          outputCsvData[0] = outputCsvHeader;
+          const middleIndex = Math.ceil(outputCsvData.length / 2);
 
-          csvStringify.stringify(outputCsvData, (e, o) =>
-            fs.writeFileSync(outputCsvPath, o)
-          );
+          const part1 = outputCsvData.splice(0, middleIndex);
+          part1[0] = outputCsvHeader;
+          csvStringify.stringify(part1, (e, o) => {
+            fs.writeFileSync(outputCsvPath1, o);
+            console.log("The 1st file has been successfully generated.");
+          });
+
+          const part2 = outputCsvData.splice(-middleIndex);
+          part2[0] = outputCsvHeader;
+          csvStringify.stringify(part2, (e, o) => {
+            fs.writeFileSync(outputCsvPath2, o);
+            console.log("The 2nd file has been successfully generated.");
+          });
         }
       }
     });
